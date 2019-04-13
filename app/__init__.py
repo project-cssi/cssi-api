@@ -1,6 +1,9 @@
-from flask import Flask
-from app.routes import *
+from flask import Blueprint
+from flask_restful import Api
+from app.applications.views import Application
 
-app = Flask(__name__)
+api_bp = Blueprint('api', __name__)
+api = Api(api_bp)
 
-app.run(debug=True)
+# Route
+api.add_resource(Application, '/application')
