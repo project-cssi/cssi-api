@@ -36,7 +36,7 @@ import os
 
 ENVIRONMENT_FILE_NAME = '.env'
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Read the environment file
 if os.path.exists(ENVIRONMENT_FILE_NAME):
@@ -91,7 +91,7 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(basedir, 'cssi-dev.sqlite')
+                              'sqlite:///' + os.path.join(BASE_DIR, 'cssi-dev.sqlite')
 
     @classmethod
     def init_app(cls, app):
@@ -113,7 +113,7 @@ class TestingConfig(Config):
 
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(basedir, 'cssi-test.sqlite')
+                              'sqlite:///' + os.path.join(BASE_DIR, 'cssi-test.sqlite')
 
     @classmethod
     def init_app(cls, app):
@@ -134,7 +134,7 @@ class ProductionConfig(Config):
     """
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(basedir, 'cssi.sqlite')
+                              'sqlite:///' + os.path.join(BASE_DIR, 'cssi.sqlite')
     SSL_DISABLE = (os.environ.get('SSL_DISABLE') or 'True') == 'True'
 
     @classmethod
