@@ -63,6 +63,7 @@ class Config:
     """
 
     APP_NAME = os.environ.get('APP_NAME') or 'CSSI_REST_API'
+    APPLICATION_ROOT = os.environ.get('APPLICATION_ROOT') or '/api/v1'
 
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
