@@ -26,10 +26,23 @@ migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
 
+@manager.command
+def create_metadata():
+    """Create the table metadata.
+
+    Application types and Genres need to be added to the database
+    in order for new applications to be added.
+    """
+    from app.models import Genre
+
+    Genre.seed()
 
 @manager.command
 def test():
-    """Run the unit tests."""
+    """Run the unit tests.
+
+    This function will run the unit tests in the tests package.
+    """
     import unittest
 
     tests = unittest.TestLoader().discover('tests')
@@ -38,9 +51,9 @@ def test():
 
 @manager.command
 def recreate_db():
-    """
-    Recreates a local database. You probably should not use this on
-    production.
+    """Recreates a local database
+
+    Not safe to use in production.
     """
     db.drop_all()
     db.create_all()
