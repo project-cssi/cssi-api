@@ -23,9 +23,14 @@ The scope should be the name of the npm package affected (as perceived by the pe
 
 The following is the list of supported scopes:
 
-  - **config**
-  - **common**
-  - **vcs**
   - **core**
-  - **routes**
+  - **common**
+  - **app**
+  - **tests**
+  - **models**
+  - **views**
+  - **manager**
+  - **vcs**
+  - **deps**
   - **migrations**
+  - **config**
