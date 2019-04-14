@@ -1,9 +1,13 @@
-from flask_restful import Resource
+from flask import Blueprint, jsonify
+
+applications = Blueprint('applications', __name__)
 
 
-class Application(Resource):
-    def get(self):
-        return {"message": "Get Application"}
+@applications.route('/', methods=['GET'])
+def get_applications():
+    return jsonify({"message": "Get Application New API"})
 
-    def post(self):
-        return {"message": "Add Application"}
+
+@applications.route('/', methods=['POST'])
+def create_application():
+    return jsonify({"message": "Created Application New API"})

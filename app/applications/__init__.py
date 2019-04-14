@@ -1,1 +1,1 @@
-from .views import Application
+from app.applications.views import applications  # noqa
