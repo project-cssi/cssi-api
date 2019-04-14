@@ -3,12 +3,12 @@ from .. import db, ma
 
 
 class Application(db.Model):
-    __tablename__ = 'applications'
+    __tablename__ = 'application'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.id', ondelete='CASCADE'), nullable=False)
-    genre = db.relationship('Genre', backref=db.backref('applications', lazy='dynamic'))
+    genre = db.relationship('Genre', backref=db.backref('application', lazy='dynamic'))
 
     def __init__(self, name, genre):
         self.name = name

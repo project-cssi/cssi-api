@@ -26,7 +26,7 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint, url_prefix=root + '/')
 
-    from .applications import applications as applications_blueprint
-    app.register_blueprint(applications_blueprint, url_prefix=root + '/applications')
+    from .application import application as application_blueprint
+    app.register_blueprint(application_blueprint, url_prefix=root + '/application')
 
     return app

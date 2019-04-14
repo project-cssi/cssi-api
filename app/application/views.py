@@ -1,13 +1,13 @@
 from flask import Blueprint, jsonify
 
-applications = Blueprint('applications', __name__)
+application = Blueprint('application', __name__)
 
 
-@applications.route('/', methods=['GET'])
+@application.route('/', methods=['GET'])
 def get_applications():
     return jsonify({"message": "Get Application New API"})
 
 
-@applications.route('/', methods=['POST'])
+@application.route('/', methods=['POST'])
 def create_application():
     return jsonify({"message": "Created Application New API"})
