@@ -143,7 +143,7 @@ class ProductionConfig(Config):
         assert os.environ.get('SECRET_KEY'), 'SECRET_KEY IS NOT SET!'
 
 
-config = {
+CONFIG = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
