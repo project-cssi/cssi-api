@@ -12,15 +12,33 @@ application_schema = ApplicationSchema()
 def get_applications():
     applications = Application.query.all()
     applications = applications_schema.dump(applications).data
-    return jsonify({"status": "success", "data": applications}), 200
+    return jsonify({'status': 'success', 'message': None, 'data': applications}), 200
 
 
 @application.route('/', methods=['POST'])
 def create_application():
-    name = request.json['name']
-    app_type = ApplicationType.query.filter_by(name=request.json['app_type']).first()
-    description = request.json['description']
-    genre = Genre.query.filter_by(name=request.json['genre']).first()
+    json_data = request.get_json(force=True)
+
+    if not json_data:
+        return jsonify({'status': 'error', 'message': 'No input was provided.'}), 400
+
+    # Validate and deserialize input
+    data, errors = application_schema.load(json_data)
+    if errors:
+        return jsonify({'status': 'error', 'message': 'Incorrect format of data provided.', 'data': errors}), 422
+
+    name = data['name']
+    app_type = ApplicationType.query.filter_by(name=data['app_type']).first()
+    description = data['description']
+    genre = Genre.query.filter_by(name=data['genre']).first()
+
+    # validate application type
+    if not app_type:
+        return {'status': 'error', 'message': 'Invalid Application Type'}, 400
+
+    # validate genre
+    if not genre:
+        return {'status': 'error', 'message': 'Invalid Genre Type'}, 400
 
     new_application = Application(name=name, app_type=app_type, description=description, genre=genre)
 
@@ -29,4 +47,4 @@ def create_application():
 
     result = application_schema.dump(new_application).data
 
-    return jsonify({"message": "Created new application {}.".format(name), "data": result})
+    return jsonify({'status': 'success', 'message': 'Created new application {}.'.format(name), 'data': result}), 201
