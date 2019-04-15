@@ -13,7 +13,7 @@ class ApplicationType(db.Model):
     name = db.Column(db.String(50), nullable=False)
     display_name = db.Column(db.String(100), nullable=False)
     display_name_full = db.Column(db.String(250), nullable=False)
-    applications = db.relationship('Application', backref='app_type', lazy='dynamic')
+    applications = db.relationship('Application', backref='type', lazy='dynamic')
 
     @classmethod
     def seed(cls):

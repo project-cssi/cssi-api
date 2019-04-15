@@ -15,6 +15,7 @@ Authors:
 
 """
 
+import uuid
 from flask import Blueprint, jsonify, request
 from app.models import Application, ApplicationType, ApplicationSchema, Genre
 from app import db
@@ -55,19 +56,22 @@ def create_application():
         return jsonify({'status': 'error', 'message': 'Incorrect format of data provided.', 'data': errors}), 422
 
     name = data['name']
-    app_type = ApplicationType.query.filter_by(name=data['app_type']).first()
+    identifier = str(uuid.uuid4().hex)
+    developer = data['developer']
+    type = ApplicationType.query.filter_by(name=data['type']).first()
     description = data['description']
     genre = Genre.query.filter_by(name=data['genre']).first()
 
+    print(identifier)
     # validate application type
-    if not app_type:
+    if not type:
         return {'status': 'error', 'message': 'Invalid Application Type'}, 400
 
     # validate genre
     if not genre:
         return {'status': 'error', 'message': 'Invalid Genre Type'}, 400
 
-    new_application = Application(name=name, app_type=app_type, description=description, genre=genre)
+    new_application = Application(name=name, identifier=identifier, developer=developer, type=type, description=description, genre=genre)
 
     db.session.add(new_application)
     db.session.commit()

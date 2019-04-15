@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 0a532bf5a8f5
+Revision ID: 1ee028de452a
 Revises: 
-Create Date: 2019-04-15 18:32:43.823721
+Create Date: 2019-04-15 23:52:00.910648
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0a532bf5a8f5'
+revision = '1ee028de452a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,12 +21,14 @@ def upgrade():
     op.create_table('application',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
-    sa.Column('app_type_id', sa.Integer(), nullable=False),
+    sa.Column('identifier', sa.String(length=100), nullable=False),
+    sa.Column('developer', sa.String(length=100), nullable=False),
+    sa.Column('type_id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=250), nullable=False),
     sa.Column('creation_date', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('genre_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['app_type_id'], ['application_type.id'], name='fk_app_type_id', use_alter=True),
     sa.ForeignKeyConstraint(['genre_id'], ['genre.id'], name='fk_genre_id', use_alter=True),
+    sa.ForeignKeyConstraint(['type_id'], ['application_type.id'], name='fk_type_id', use_alter=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('application_type',
