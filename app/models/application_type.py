@@ -15,6 +15,11 @@ class ApplicationType(db.Model):
     display_name_full = db.Column(db.String(250), nullable=False)
     applications = db.relationship('Application', backref='type', lazy='dynamic')
 
+    def __init__(self, name, display_name, display_name_full):
+        self.name = name
+        self.display_name = display_name
+        self.display_name_full = display_name_full
+
     @classmethod
     def seed(cls):
         if cls.is_table_empty(cls):
@@ -41,7 +46,7 @@ class ApplicationType(db.Model):
         return False
 
     def __repr__(self):
-        return self.display_name_full
+        return '<ApplicationType %r>' % self.id
 
 
 class ApplicationTypeSchema(ma.Schema):

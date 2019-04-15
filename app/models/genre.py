@@ -14,6 +14,10 @@ class Genre(db.Model):
     display_name = db.Column(db.String(250), nullable=False)
     applications = db.relationship('Application', backref='genre', lazy='dynamic')
 
+    def __init__(self, name, display_name):
+        self.name = name
+        self.display_name = display_name
+
     @classmethod
     def seed(cls):
         if cls.is_table_empty(cls):
@@ -40,7 +44,7 @@ class Genre(db.Model):
         return False
 
     def __repr__(self):
-        return self.display_name
+        return '<Genre %r>' % self.id
 
 
 class GenreSchema(ma.Schema):

@@ -6,18 +6,27 @@ class Questionnaire(db.Model):
     __tablename__ = 'questionnaire'
 
     id = db.Column(db.Integer, primary_key=True)
-    pre = db.Column(db.String, nullable=False)
-    post = db.Column(db.String, nullable=False)
+    pre = db.Column(db.JSON, nullable=False)
+    post = db.Column(db.JSON, nullable=False, default={})
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
-    session_id = db.Column(db.Integer, db.ForeignKey('session.id', use_alter=True, name='fk_session_id'), nullable=False)
-    session = db.relationship('Session', backref='questionnaire', lazy='dynamic')
+    session = db.relationship("Session", uselist=False, backref="questionnaire")
+
+    def __init__(self, pre, post):
+        self.pre = pre
+        self.post = post
 
     def __repr__(self):
-        return self.id
+        return '<Questionnaire %r>' % self.id
 
 
-class ApplicationSchema(ma.Schema):
+class SymptomSchema(ma.Schema):
+    name = fields.String(required=False)
+    display_name = fields.String(required=False)
+    score = fields.String(required=False)
+
+
+class QuestionnaireSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
-    pre = fields.String(required=True, validate=validate.Length(1))
-    post = fields.String(required=False)
+    pre = fields.List(fields.Nested(SymptomSchema), dump_only=True)
+    post = fields.List(fields.Nested(SymptomSchema), dump_only=True)
     creation_date = fields.DateTime()
