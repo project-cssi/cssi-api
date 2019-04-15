@@ -13,7 +13,7 @@ for applications.
 
 Attributes:
     GENRE_META_FILE_PATH (str): Path for the file containing genre meta
-    TYPE_META_FILE_PATH (str): Path for the file containing application type meta
+    APPLICATION_TYPE_META_FILE_PATH (str): Path for the file containing application type meta
 
 Authors:
     Brion Mario
@@ -26,7 +26,7 @@ from marshmallow import fields, validate
 from .. import db, ma
 
 GENRE_META_FILE_PATH = 'meta/genre.meta.json'
-
+APPLICATION_TYPE_META_FILE_PATH = 'meta/application_type.meta.json'
 
 class Application(db.Model):
     __tablename__ = 'application'
@@ -34,14 +34,15 @@ class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('application_type.id', ondelete='CASCADE'), nullable=False)
-    type = db.relationship('Type', backref=db.backref('application', lazy='dynamic'))
+    type = db.relationship('ApplicationType', backref=db.backref('application', lazy='dynamic'))
     description = db.Column(db.String(250), nullable=False)
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.id', ondelete='CASCADE'), nullable=False)
     genre = db.relationship('Genre', backref=db.backref('application', lazy='dynamic'))
 
-    def __init__(self, name, description, genre_id):
+    def __init__(self, name, type_id, description, genre_id):
         self.name = name
+        self.type_id = type_id
         self.description = description
         self.genre_id = genre_id
 
@@ -60,9 +61,10 @@ class Genre(db.Model):
         if os.path.exists(GENRE_META_FILE_PATH):
             with open(GENRE_META_FILE_PATH) as genre_meta_json:
                 data = json.load(genre_meta_json)
-                for genre in data['genre']:
-                    genre = Genre(name=genre['name'])
+                for item in data['genre']:
+                    genre = Genre(name=item['name'])
                     genre.save()
+                    print("Adding genre metadata: {}".format(genre))
         else:
             # TODO: Add exception
             print("Couldn't locate meta file")
@@ -75,11 +77,28 @@ class Genre(db.Model):
         return '<Genre \'%s\'>' % self.name
 
 
-class Type(db.Model):
+class ApplicationType(db.Model):
     __tablename__ = 'application_type'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+
+    @classmethod
+    def seed(cls):
+        if os.path.exists(APPLICATION_TYPE_META_FILE_PATH):
+            with open(APPLICATION_TYPE_META_FILE_PATH) as app_type_meta_json:
+                data = json.load(app_type_meta_json)
+                for item in data['types']:
+                    app_type = ApplicationType(name=item['name'])
+                    app_type.save()
+                    print("Adding application type metadata: {}".format(app_type))
+        else:
+            # TODO: Add exception
+            print("Couldn't locate meta file")
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return '<ApplicationType \'%s\'>' % self.name

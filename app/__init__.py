@@ -20,7 +20,7 @@ def create_app(config_name):
 
     root = CONFIG[config_name].APPLICATION_ROOT
 
-    from app.models import Application, Genre, Type
+    from app.models import Application, Genre, ApplicationType
 
     # Set up extensions
     db.init_app(app)

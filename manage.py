@@ -33,9 +33,10 @@ def create_metadata():
     Application types and Genres need to be added to the database
     in order for new applications to be added.
     """
-    from app.models import Genre
+    from app.models import Genre, ApplicationType
 
     Genre.seed()
+    ApplicationType.seed()
 
 @manager.command
 def test():
