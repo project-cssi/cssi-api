@@ -17,7 +17,7 @@ Authors:
 
 from flask import Blueprint, jsonify, request
 from app.models import Application, ApplicationType, ApplicationSchema, Genre
-from .. import db
+from app import db
 
 application = Blueprint('application', __name__)
 

@@ -27,10 +27,10 @@ def create_app(config_name):
     db.init_app(app)
 
     # Create app blueprints
-    from .main import main as main_blueprint
+    from app.routes.main import main as main_blueprint
     app.register_blueprint(main_blueprint, url_prefix=root + '/')
 
-    from .application import application as application_blueprint
+    from app.routes.application import application as application_blueprint
     app.register_blueprint(application_blueprint, url_prefix=root + '/application')
 
     return app
