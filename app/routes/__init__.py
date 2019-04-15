@@ -1,2 +1,1 @@
-from app.routes.main import main  # noqa
-from app.routes.application import application  # noqa
+from app.routes.v1 import *  # noqa
