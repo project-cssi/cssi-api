@@ -1,13 +1,19 @@
 {
   "types": [
     {
-      "name": "vr"
+      "name": "vr",
+      "display_name": "VR",
+      "display_name_full": "Virtual Reality"
     },
     {
-      "name": "ar"
+      "name": "ar",
+      "display_name": "AR",
+      "display_name_full": "Augmented Reality"
     },
     {
-      "name": "mr"
+      "name": "mr",
+      "display_name": "VR",
+      "display_name_full": "Mixed Reality"
     }
   ]
 }
