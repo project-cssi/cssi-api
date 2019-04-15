@@ -1,37 +1,48 @@
 {
   "genre": [
     {
-      "name": "Puzzle"
+      "name": "puzzle",
+      "display_name": "Puzzle"
     },
     {
-      "name": "Arcade"
+      "name": "arcade",
+      "display_name": "Arcade"
     },
     {
-      "name": "Action"
+      "name": "action",
+      "display_name": "Action"
     },
     {
-      "name": "Family"
+      "name": "family",
+      "display_name": "Family"
     },
     {
-      "name": "Educational"
+      "name": "educational",
+      "display_name": "Educational"
     },
     {
-      "name": "Adventure"
+      "name": "adventure",
+      "display_name": "Adventure"
     },
     {
-      "name": "Strategy"
+      "name": "strategy",
+      "display_name": "Strategy"
     },
     {
-      "name": "Board"
+      "name": "board",
+      "display_name": "Board"
     },
     {
-      "name": "Simulation"
+      "name": "simulation",
+      "display_name": "Simulation"
     },
     {
-      "name": "Trivia"
+      "name": "trivia",
+      "display_name": "Trivia"
     },
     {
-      "name": "Other"
+      "name": "other",
+      "display_name": "Other"
     }
   ]
 }
