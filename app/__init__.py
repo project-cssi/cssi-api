@@ -20,6 +20,7 @@ def create_app(config_name):
 
     root = CONFIG[config_name].APPLICATION_ROOT
 
+    # flask migrate doesn't recognize the tables without this import
     from app.models import Application, Genre, ApplicationType
 
     # Set up extensions
