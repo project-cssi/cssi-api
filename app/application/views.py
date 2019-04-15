@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import Application, ApplicationType, ApplicationSchema
-from marshmallow import Schema, fields, ValidationError, pre_load
+from app.models import Application, ApplicationType, ApplicationSchema, Genre
 from .. import db
 
 application = Blueprint('application', __name__)
@@ -19,11 +18,11 @@ def get_applications():
 @application.route('/', methods=['POST'])
 def create_application():
     name = request.json['name']
-    type_id = request.json['type_id']
+    app_type = ApplicationType.query.filter_by(name=request.json['app_type']).first()
     description = request.json['description']
-    genre_id = request.json['genre_id']
+    genre = Genre.query.filter_by(name=request.json['genre']).first()
 
-    new_application = Application(name=name, type_id=type_id, description=description, genre_id=genre_id)
+    new_application = Application(name=name, app_type=app_type, description=description, genre=genre)
 
     db.session.add(new_application)
     db.session.commit()
