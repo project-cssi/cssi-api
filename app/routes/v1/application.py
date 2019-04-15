@@ -45,6 +45,7 @@ def get_application(id):
 @application.route('/', methods=['POST'])
 def create_application():
     """Create a new Application"""
+
     json_data = request.get_json(force=True)
 
     if not json_data:
@@ -55,14 +56,13 @@ def create_application():
     if errors:
         return jsonify({'status': 'error', 'message': 'Incorrect format of data provided.', 'data': errors}), 422
 
-    name = data['name']
+    name = request.json['name']
     identifier = str(uuid.uuid4().hex)
-    developer = data['developer']
-    type = ApplicationType.query.filter_by(name=data['type']).first()
-    description = data['description']
-    genre = Genre.query.filter_by(name=data['genre']).first()
+    developer = request.json['developer']
+    type = ApplicationType.query.filter_by(id=request.json['type']).first()
+    description = request.json['description']
+    genre = Genre.query.filter_by(id=request.json['genre']).first()
 
-    print(identifier)
     # validate application type
     if not type:
         return {'status': 'error', 'message': 'Invalid Application Type'}, 400

@@ -6,3 +6,5 @@ module (as opposed to just their python files)
 from .application import *  # noqa
 from .application_type import *  # noqa
 from .genre import *  # noqa
+from .session import *  # noqa
+from .questionnaire import *  # noqa
