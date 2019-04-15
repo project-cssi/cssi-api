@@ -1,22 +1,49 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# (c) Copyright 2019 Brion Mario.
+# (c) This file is part of the CSSI REST API and is made available under MIT license.
+# (c) For more information, see https://github.com/brionmario/cssi-api/blob/master/LICENSE.txt
+# (c) Please forward any queries to the given email address. email: brion@apareciumlabs.com
+
+"""Application routes module
+
+This modules contains all the different routes to interact with applications.
+
+Authors:
+    Brion Mario
+
+"""
+
 from flask import Blueprint, jsonify, request
 from app.models import Application, ApplicationType, ApplicationSchema, Genre
 from .. import db
 
 application = Blueprint('application', __name__)
 
-applications_schema = ApplicationSchema(many=True)
-application_schema = ApplicationSchema()
+application_schema = ApplicationSchema(strict=True)
+applications_schema = ApplicationSchema(many=True, strict=True)
 
 
 @application.route('/', methods=['GET'])
 def get_applications():
+    """Get a list of all the Applications"""
     applications = Application.query.all()
-    applications = applications_schema.dump(applications).data
-    return jsonify({'status': 'success', 'message': None, 'data': applications}), 200
+    result = applications_schema.dump(applications).data
+    return jsonify({'status': 'success', 'message': None, 'data': result}), 200
+
+
+@application.route('/<int:id>', methods=['GET'])
+def get_application(id):
+    """Get info on an Applications when an id is passed in"""
+    application = Application.query.get(id)
+    result = application_schema.dump(application).data
+    return jsonify({'status': 'success', 'message': None, 'data': result}), 200
 
 
 @application.route('/', methods=['POST'])
 def create_application():
+    """Create a new Application"""
     json_data = request.get_json(force=True)
 
     if not json_data:
