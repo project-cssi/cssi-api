@@ -31,12 +31,12 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint, url_prefix=root + '/')
 
     from app.routes.v1 import application as application_blueprint
-    app.register_blueprint(application_blueprint, url_prefix=root + '/application')
+    app.register_blueprint(application_blueprint, url_prefix=root + '/applications')
 
     from app.routes.v1 import session as session_blueprint
-    app.register_blueprint(session_blueprint, url_prefix=root + '/session')
+    app.register_blueprint(session_blueprint, url_prefix=root + '/sessions')
 
     from app.routes.v1 import questionnaire as questionnaire_blueprint
-    app.register_blueprint(questionnaire_blueprint, url_prefix=root + '/questionnaire')
+    app.register_blueprint(questionnaire_blueprint, url_prefix=root + '/questionnaires')
 
     return app
