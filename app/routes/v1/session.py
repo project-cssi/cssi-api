@@ -16,6 +16,7 @@ Authors:
 """
 
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
 from app.models import Session, SessionSchema, Application, Questionnaire
 from app import db
 
@@ -26,6 +27,7 @@ sessions_schema = SessionSchema(many=True, strict=True)
 
 
 @session.route('/', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_sessions_list():
     """Get a list of all the sessions"""
     sessions = Session.query.all()
@@ -34,6 +36,7 @@ def get_sessions_list():
 
 
 @session.route('/<int:id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_session(id):
     """Get info on a session when an id is passed in"""
     session = Session.query.get(id)
@@ -42,6 +45,7 @@ def get_session(id):
 
 
 @session.route('/', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def create_session():
     """Create a new Session"""
 
