@@ -15,8 +15,8 @@ Authors:
 
 """
 
-import uuid
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
 from app.models import Questionnaire, ApplicationType, QuestionnaireSchema, Genre
 from app import db
 
@@ -27,6 +27,7 @@ questionnaires_schema = QuestionnaireSchema(many=True, strict=True)
 
 
 @questionnaire.route('/', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_questionnaire_list():
     """Get a list of all the Questionnaire"""
     questionnaires = Questionnaire.query.all()
@@ -35,6 +36,7 @@ def get_questionnaire_list():
 
 
 @questionnaire.route('/<int:id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_questionnaire(id):
     """Get questionnaire when an id is passed in"""
     questionnaire = Questionnaire.query.get(id)
@@ -43,6 +45,7 @@ def get_questionnaire(id):
 
 
 @questionnaire.route('/', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def create_questionnaire():
     """Create a new Questionnaire"""
     pre = request.json['pre']

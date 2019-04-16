@@ -15,19 +15,27 @@ Authors:
 
 """
 
+import logging
 import uuid
+import traceback
+from flask_cors import cross_origin
 from flask import Blueprint, jsonify, request
-from app.models import Application, ApplicationType, ApplicationSchema, Genre
+from app.models import Application, ApplicationType,ApplicationTypeSchema, ApplicationSchema, Genre, GenreSchema
 from app import db
+
+logger = logging.getLogger('CSSI_REST_API')
 
 application = Blueprint('application', __name__)
 
 application_schema = ApplicationSchema(strict=True)
 applications_schema = ApplicationSchema(many=True, strict=True)
+application_types_schema = ApplicationTypeSchema(many=True, strict=True)
+application_genres_schema = GenreSchema(many=True, strict=True)
 
 
 @application.route('/', methods=['GET'])
-def get_applications():
+@cross_origin(supports_credentials=True)
+def get_application_list():
     """Get a list of all the Applications"""
     applications = Application.query.all()
     result = applications_schema.dump(applications).data
@@ -35,6 +43,7 @@ def get_applications():
 
 
 @application.route('/<int:id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_application(id):
     """Get info on an Applications when an id is passed in"""
     application = Application.query.get(id)
@@ -42,7 +51,26 @@ def get_application(id):
     return jsonify({'status': 'success', 'message': None, 'data': result}), 200
 
 
+@application.route('/types', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_application_types():
+    """Get all the available application types"""
+    application_types = ApplicationType.query.all()
+    result = application_types_schema.dump(application_types).data
+    return jsonify({'status': 'success', 'message': None, 'data': result}), 200
+
+
+@application.route('/genres', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_application_genres():
+    """Get all the available application genres"""
+    application_genres = Genre.query.all()
+    result = application_genres_schema.dump(application_genres).data
+    return jsonify({'status': 'success', 'message': None, 'data': result}), 200
+
+
 @application.route('/', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def create_application():
     """Create a new Application"""
 
@@ -79,3 +107,18 @@ def create_application():
     result = application_schema.dump(new_application).data
 
     return jsonify({'status': 'success', 'message': 'Created new application {}.'.format(name), 'data': result}), 201
+
+
+@application.after_request
+def after_request(response):
+    """Logs a debug message on every successful request."""
+    logger.debug('%s %s %s %s %s', request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
+
+
+@application.errorhandler(Exception)
+def exceptions(e):
+    """Logs an error message and stacktrace if a request ends in error."""
+    tb = traceback.format_exc()
+    logger.error('%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s', request.remote_addr, request.method, request.scheme, request.full_path, tb)
+    return e.status_code
