@@ -31,16 +31,17 @@ Authors:
     Brion Mario
 
 """
-
+import logging
 import os
 
-ENVIRONMENT_FILE_NAME = '.env'
+logger = logging.getLogger('CSSI_REST_API')
 
+ENVIRONMENT_FILE_NAME = '.env'
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Read the environment file
 if os.path.exists(ENVIRONMENT_FILE_NAME):
-    print('Importing environment from environment file')
+    logger.info('Importing environment from environment file')
     for line in open(ENVIRONMENT_FILE_NAME):
         var = line.strip().split('=')
         if len(var) == 2:
@@ -69,7 +70,7 @@ class Config:
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:
         SECRET_KEY = 'SECRET_KEY_ENV_VAR_NOT_SET'
-        print('SECRET KEY ENV VAR NOT SET! SHOULD NOT SEE IN PRODUCTION')
+        logger.error('Secret key is not set in the environment')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
     @staticmethod
@@ -95,8 +96,7 @@ class DevelopmentConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        print('THIS APP IS IN DEBUG MODE. \
-                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+        logger.info('The app is running in debug mode.')
 
 
 class TestingConfig(Config):
@@ -117,8 +117,7 @@ class TestingConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        print('THIS APP IS IN TESTING MODE.  \
-                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+        logger.info('The app is running in testing mode.')
 
 
 class ProductionConfig(Config):
@@ -139,6 +138,7 @@ class ProductionConfig(Config):
 
     @classmethod
     def init_app(cls, app):
+        logger.info('The app is running in production mode.')
         Config.init_app(app)
         assert os.environ.get('SECRET_KEY'), 'SECRET_KEY IS NOT SET!'
 
