@@ -20,7 +20,7 @@ import uuid
 import traceback
 from flask_cors import cross_origin
 from flask import Blueprint, jsonify, request
-from app.models import Application, ApplicationType,ApplicationTypeSchema, ApplicationSchema, Genre
+from app.models import Application, ApplicationType,ApplicationTypeSchema, ApplicationSchema, Genre, GenreSchema
 from app import db
 
 logger = logging.getLogger('CSSI_REST_API')
@@ -30,6 +30,7 @@ application = Blueprint('application', __name__)
 application_schema = ApplicationSchema(strict=True)
 applications_schema = ApplicationSchema(many=True, strict=True)
 application_types_schema = ApplicationTypeSchema(many=True, strict=True)
+application_genres_schema = GenreSchema(many=True, strict=True)
 
 
 @application.route('/', methods=['GET'])
@@ -56,6 +57,15 @@ def get_application_types():
     """Get all the available application types"""
     application_types = ApplicationType.query.all()
     result = application_types_schema.dump(application_types).data
+    return jsonify({'status': 'success', 'message': None, 'data': result}), 200
+
+
+@application.route('/genres', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_application_genres():
+    """Get all the available application genres"""
+    application_genres = Genre.query.all()
+    result = application_genres_schema.dump(application_genres).data
     return jsonify({'status': 'success', 'message': None, 'data': result}), 200
 
 
