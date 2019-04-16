@@ -16,6 +16,7 @@ Authors:
 """
 
 import uuid
+from flask_cors import cross_origin
 from flask import Blueprint, jsonify, request
 from app.models import Application, ApplicationType, ApplicationSchema, Genre
 from app import db
@@ -27,6 +28,7 @@ applications_schema = ApplicationSchema(many=True, strict=True)
 
 
 @application.route('/', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_applications():
     """Get a list of all the Applications"""
     applications = Application.query.all()
@@ -35,6 +37,7 @@ def get_applications():
 
 
 @application.route('/<int:id>', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def get_application(id):
     """Get info on an Applications when an id is passed in"""
     application = Application.query.get(id)
@@ -43,6 +46,7 @@ def get_application(id):
 
 
 @application.route('/', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def create_application():
     """Create a new Application"""
 
