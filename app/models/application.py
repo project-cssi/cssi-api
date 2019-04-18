@@ -37,6 +37,6 @@ class ApplicationSchema(ma.Schema):
     developer = fields.String(required=True, validate=validate.Length(1, 100))
     type = fields.Nested(ApplicationTypeSchema, dump_only=True)
     description = fields.String(required=True, validate=validate.Length(1, 250))
-    creation_date = fields.DateTime()
+    creation_date = fields.DateTime(dump_only=True)
     genre = fields.Nested(GenreSchema, dump_only=True)
     public_sharing = fields.Boolean(required=True)

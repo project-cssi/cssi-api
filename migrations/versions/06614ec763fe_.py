@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: d874df9a1f85
+Revision ID: 06614ec763fe
 Revises: 
-Create Date: 2019-04-19 01:39:08.576426
+Create Date: 2019-04-19 02:19:26.253782
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd874df9a1f85'
+revision = '06614ec763fe'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -56,7 +56,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('app_id', sa.Integer(), nullable=False),
     sa.Column('creation_date', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-    sa.Column('expected_emotions', sa.PickleType(), nullable=False),
+    sa.Column('expected_emotions', sa.JSON(), nullable=False),
     sa.Column('questionnaire_id', sa.Integer(), nullable=False),
     sa.Column('cssi_score', sa.Float(), nullable=False),
     sa.Column('latency_scores', sa.JSON(), nullable=False),
