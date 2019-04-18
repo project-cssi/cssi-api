@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: cb018c771a53
+Revision ID: d874df9a1f85
 Revises: 
-Create Date: 2019-04-16 01:05:44.197617
+Create Date: 2019-04-19 01:39:08.576426
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cb018c771a53'
+revision = 'd874df9a1f85'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('developer', sa.String(length=100), nullable=False),
     sa.Column('type_id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=250), nullable=False),
+    sa.Column('public_sharing', sa.Boolean(), nullable=False),
     sa.Column('creation_date', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('genre_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['genre_id'], ['genre.id'], name='fk_genre_id', use_alter=True),
@@ -46,25 +47,23 @@ def upgrade():
     )
     op.create_table('questionnaire',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('pre', sa.TEXT(), nullable=False),
-    sa.Column('post', sa.TEXT(), nullable=False),
+    sa.Column('pre', sa.JSON(), nullable=False),
+    sa.Column('post', sa.JSON(), nullable=False),
     sa.Column('creation_date', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-    sa.Column('session_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['session_id'], ['session.id'], name='fk_session_id', use_alter=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('session',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('app_id', sa.Integer(), nullable=False),
     sa.Column('creation_date', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-    sa.Column('expected_emotions', sa.TEXT(), nullable=False),
-    sa.Column('cssi_score', sa.Float(), nullable=False),
-    sa.Column('latency_scores', sa.TEXT(), nullable=False),
-    sa.Column('total_latency_score', sa.Float(), nullable=False),
-    sa.Column('sentiment_scores', sa.TEXT(), nullable=False),
-    sa.Column('total_sentiment_score', sa.Float(), nullable=False),
+    sa.Column('expected_emotions', sa.PickleType(), nullable=False),
     sa.Column('questionnaire_id', sa.Integer(), nullable=False),
-    sa.Column('questionnaire_scores', sa.TEXT(), nullable=True),
+    sa.Column('cssi_score', sa.Float(), nullable=False),
+    sa.Column('latency_scores', sa.JSON(), nullable=False),
+    sa.Column('total_latency_score', sa.Float(), nullable=False),
+    sa.Column('sentiment_scores', sa.JSON(), nullable=False),
+    sa.Column('total_sentiment_score', sa.Float(), nullable=False),
+    sa.Column('questionnaire_scores', sa.JSON(), nullable=True),
     sa.Column('total_questionnaire_score', sa.Float(), nullable=False),
     sa.ForeignKeyConstraint(['app_id'], ['application.id'], name='fk_app_id', use_alter=True),
     sa.ForeignKeyConstraint(['questionnaire_id'], ['questionnaire.id'], name='fk_questionnaire_id', use_alter=True),
