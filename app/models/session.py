@@ -8,6 +8,7 @@ class Session(db.Model):
     __tablename__ = 'session'
 
     id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(25), nullable=False, default='initialised')
     app_id = db.Column(db.Integer, db.ForeignKey('application.id', use_alter=True, name='fk_app_id'), nullable=False)
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
     expected_emotions = db.Column(db.JSON, nullable=False)
@@ -31,6 +32,7 @@ class Session(db.Model):
 
 class SessionSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
+    status = fields.String()
     creation_date = fields.DateTime(dump_only=True)
     expected_emotions = fields.List(fields.String(), required=True)
     app = fields.Nested(ApplicationSchema, dump_only=True)

@@ -52,8 +52,6 @@ def create_session():
     questionnaire = Questionnaire.query.filter_by(id=request.json['questionnaire']).first()
     expected_emotions = request.json['expected_emotions']
 
-    print(questionnaire)
-
     # validate application type
     if not app:
         return {'status': 'error', 'message': 'Invalid application.'}, 400
