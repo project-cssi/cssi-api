@@ -48,9 +48,8 @@ def get_session(id):
 @cross_origin(supports_credentials=True)
 def create_session():
     """Create a new Session"""
-
     app = Application.query.filter_by(id=request.json['app']).first()
-    questionnaire = Questionnaire.query.filter_by(id=request.json['questionnaire_id']).first()
+    questionnaire = Questionnaire.query.filter_by(id=request.json['questionnaire']).first()
     expected_emotions = request.json['expected_emotions']
 
     print(questionnaire)
