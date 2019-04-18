@@ -10,7 +10,7 @@ class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     app_id = db.Column(db.Integer, db.ForeignKey('application.id', use_alter=True, name='fk_app_id'), nullable=False)
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
-    expected_emotions = db.Column(db.JSON, nullable=False)
+    expected_emotions = db.Column(db.PickleType, nullable=False)
     questionnaire_id = db.Column(db.Integer, db.ForeignKey('questionnaire.id', use_alter=True, name='fk_questionnaire_id'), nullable=False)
     cssi_score = db.Column(db.Float, nullable=False, default=0)
     latency_scores = db.Column(db.JSON, nullable=False, default={})

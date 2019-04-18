@@ -21,6 +21,6 @@ class Questionnaire(db.Model):
 
 class QuestionnaireSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
-    pre = fields.Raw(required=True)
-    post = fields.Raw(required=False)
+    pre = fields.Dict(required=True)
+    post = fields.Dict(required=False)
     creation_date = fields.DateTime()
