@@ -17,7 +17,7 @@ Authors:
 
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-from app.models import Questionnaire, ApplicationType, QuestionnaireSchema, Genre
+from app.models import Questionnaire, QuestionnaireSchema
 from app import db
 
 questionnaire = Blueprint('questionnaire', __name__)

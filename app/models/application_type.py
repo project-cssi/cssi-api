@@ -50,7 +50,7 @@ class ApplicationType(db.Model):
 
 
 class ApplicationTypeSchema(ma.Schema):
-    id = fields.Integer()
+    id = fields.Integer(dump_only=True)
     name = fields.String(required=True)
     display_name = fields.String(required=True)
     display_name_full = fields.String(required=True)

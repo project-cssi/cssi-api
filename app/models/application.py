@@ -13,6 +13,7 @@ class Application(db.Model):
     developer = db.Column(db.String(100), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('application_type.id', use_alter=True, name='fk_type_id'), nullable=False)
     description = db.Column(db.String(250), nullable=False)
+    public_sharing = db.Column(db.Boolean, nullable=False, default=False)
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.id', use_alter=True, name='fk_genre_id'), nullable=False)
     sessions = db.relationship('Session', backref='app', lazy='dynamic')
@@ -38,3 +39,4 @@ class ApplicationSchema(ma.Schema):
     description = fields.String(required=True, validate=validate.Length(1, 250))
     creation_date = fields.DateTime()
     genre = fields.Nested(GenreSchema, dump_only=True)
+    public_sharing = fields.Boolean(required=True)
