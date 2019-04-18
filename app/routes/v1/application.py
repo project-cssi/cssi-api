@@ -73,17 +73,6 @@ def get_application_genres():
 @cross_origin(supports_credentials=True)
 def create_application():
     """Create a new Application"""
-
-    json_data = request.get_json(force=True)
-
-    if not json_data:
-        return jsonify({'status': 'error', 'message': 'No input was provided.'}), 400
-
-    # Validate and deserialize input
-    data, errors = application_schema.load(json_data)
-    if errors:
-        return jsonify({'status': 'error', 'message': 'Incorrect format of data provided.', 'data': errors}), 422
-
     name = request.json['name']
     identifier = str(uuid.uuid4().hex)
     developer = request.json['developer']
