@@ -20,10 +20,10 @@ import uuid
 import traceback
 from flask_cors import cross_origin
 from flask import Blueprint, jsonify, request
-from app.models import Application, ApplicationType,ApplicationTypeSchema, ApplicationSchema, Genre, GenreSchema
+from app.models import Application, ApplicationType, ApplicationTypeSchema, ApplicationSchema, Genre, GenreSchema
 from app import db
 
-logger = logging.getLogger('CSSI_REST_API')
+logger = logging.getLogger('cssi.api')
 
 application = Blueprint('application', __name__)
 
@@ -88,7 +88,8 @@ def create_application():
     if not genre:
         return {'status': 'error', 'message': 'Invalid Genre Type'}, 400
 
-    new_application = Application(name=name, identifier=identifier, developer=developer, type=type, description=description, genre=genre)
+    new_application = Application(name=name, identifier=identifier,
+                                  developer=developer, type=type, description=description, genre=genre)
 
     db.session.add(new_application)
     db.session.commit()
@@ -101,7 +102,8 @@ def create_application():
 @application.after_request
 def after_request(response):
     """Logs a debug message on every successful request."""
-    logger.debug('%s %s %s %s %s', request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    logger.debug('%s %s %s %s %s', request.remote_addr, request.method,
+                 request.scheme, request.full_path, response.status)
     return response
 
 
@@ -109,5 +111,6 @@ def after_request(response):
 def exceptions(e):
     """Logs an error message and stacktrace if a request ends in error."""
     tb = traceback.format_exc()
-    logger.error('%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s', request.remote_addr, request.method, request.scheme, request.full_path, tb)
+    logger.error('%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s', request.remote_addr,
+                 request.method, request.scheme, request.full_path, tb)
     return e.status_code
