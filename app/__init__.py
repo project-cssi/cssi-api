@@ -44,7 +44,7 @@ celery.config_from_object('celeryconfig')
 from app.models import *  # noqa
 
 # Import celery task to register them with Celery workers
-from .tasks import run_flask_request  # noqa
+from . import tasks  # noqa
 
 # Import Socket.IO events to register them with Flask-SocketIO
 from . import events  # noqa
@@ -91,9 +91,5 @@ def create_app(config_name=None, main=True):
 
     from app.routes.v1 import questionnaire as questionnaire_blueprint
     app.register_blueprint(questionnaire_blueprint, url_prefix=root + '/questionnaires')
-
-    # Register async tasks support
-    from .tasks import tasks as tasks_blueprint
-    app.register_blueprint(tasks_blueprint, url_prefix='/tasks')
 
     return app
