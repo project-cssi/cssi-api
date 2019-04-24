@@ -34,7 +34,7 @@ Authors:
 import logging
 import os
 
-logger = logging.getLogger('CSSI_REST_API')
+logger = logging.getLogger('cssi.api')
 
 ENVIRONMENT_FILE_NAME = '.env'
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -65,6 +65,8 @@ class Config:
 
     APP_NAME = os.environ.get('APP_NAME') or 'CSSI_REST_API'
     APPLICATION_ROOT = os.environ.get('APPLICATION_ROOT') or '/api/v1'
+    CELERY_BROKER_URL = os.environ.get(
+        'CELERY_BROKER_URL', 'redis://localhost:6379')
     CELERY_CONFIG = {}
     SOCKETIO_MESSAGE_QUEUE = os.environ.get(
         'SOCKETIO_MESSAGE_QUEUE', os.environ.get('CELERY_BROKER_URL',
@@ -96,9 +98,11 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(BASE_DIR, 'cssi-dev.sqlite')
+        'sqlite:///' + os.path.join(BASE_DIR, 'cssi-dev.sqlite')
+    CELERY_BROKER_URL = os.environ.get(
+        'DEV_CELERY_BROKER_URL', 'redis://localhost:6379')
     CELERY_BACKEND = os.environ.get('DEV_CELERY_BACKEND') or \
-                              'sqlite:///' + os.path.join(BASE_DIR, 'celery-dev.sqlite')
+        'sqlite:///' + os.path.join(BASE_DIR, 'celery-dev.sqlite')
 
     @classmethod
     def init_app(cls, app):
@@ -119,9 +123,11 @@ class TestingConfig(Config):
 
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(BASE_DIR, 'cssi-test.sqlite')
+        'sqlite:///' + os.path.join(BASE_DIR, 'cssi-test.sqlite')
+    CELERY_BROKER_URL = os.environ.get(
+        'TEST_CELERY_BROKER_URL', 'redis://localhost:6379')
     CELERY_BACKEND = os.environ.get('TEST_CELERY_BACKEND') or \
-                     'sqlite:///' + os.path.join(BASE_DIR, 'celery-test.sqlite')
+        'sqlite:///' + os.path.join(BASE_DIR, 'celery-test.sqlite')
     CELERY_CONFIG = {'CELERY_ALWAYS_EAGER': True}
     SOCKETIO_MESSAGE_QUEUE = None
 
@@ -143,9 +149,11 @@ class ProductionConfig(Config):
     """
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(BASE_DIR, 'cssi.sqlite')
+        'sqlite:///' + os.path.join(BASE_DIR, 'cssi.sqlite')
+    CELERY_BROKER_URL = os.environ.get(
+        'CELERY_BROKER_URL', 'redis://localhost:6379')
     CELERY_BACKEND = os.environ.get('CELERY_BACKEND') or \
-                     'sqlite:///' + os.path.join(BASE_DIR, 'celery.sqlite')
+        'sqlite:///' + os.path.join(BASE_DIR, 'celery.sqlite')
     SSL_DISABLE = (os.environ.get('SSL_DISABLE') or 'True') == 'True'
 
     @classmethod

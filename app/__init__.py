@@ -7,11 +7,13 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_socketio import SocketIO
+from cssi.core import CSSI
 
 from config import CONFIG
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-LOG_FILES_PATH = os.path.split(BASE_DIR)[0] + '/logs'
+LOG_FILES_PATH = os.path.join(os.path.split(BASE_DIR)[0], "logs")
+LOGGER_CONFIG_PATH = os.path.join(os.path.split(BASE_DIR)[0], "config", "logging.conf")
 
 # Try to create a log folder
 try:
@@ -21,16 +23,21 @@ except OSError:
     pass
 
 # Load logging config file
-logging.config.fileConfig('config/logging.conf', disable_existing_loggers=False)
+logging.config.fileConfig(LOGGER_CONFIG_PATH, disable_existing_loggers=False)
 # Init file logger
-logger = logging.getLogger('CSSI_REST_API')
+logger = logging.getLogger('cssi.api')
 
+# set `socketio` and `engineio` log level to `ERROR`
+logging.getLogger('socketio').setLevel(logging.ERROR)
+logging.getLogger('engineio').setLevel(logging.ERROR)
+
+cssi = CSSI(shape_predictor="app/data/classifiers/shape_predictor_68_face_landmarks.dat", debug=False, config_file="cssi.rc")
 db = SQLAlchemy()
 ma = Marshmallow()
 socketio = SocketIO()
 celery = Celery(__name__,
-                broker=os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379'),
-                backend=os.environ.get('CELERY_BACKEND', 'redis://localhost:6379'))
+                broker=os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0'),
+                backend=os.environ.get('CELERY_BACKEND', 'redis://localhost:6379/0'))
 celery.config_from_object('celeryconfig')
 
 # Import models to register them with SQLAlchemy
@@ -44,6 +51,8 @@ from . import events  # noqa
 
 
 def create_app(config_name=None, main=True):
+    if config_name is None:
+        config_name = os.environ.get('CSSI_CONFIG', 'default')
     app = Flask(__name__)
     app.config.from_object(CONFIG[config_name])
 
