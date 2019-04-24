@@ -1,95 +1,52 @@
-from functools import wraps
-try:
-    from io import BytesIO
-except ImportError:  # pragma:  no cover
-    from cStringIO import StringIO as BytesIO
+import time
+import logging
+from datetime import datetime
 
-from flask import Blueprint, abort, g, request
-from werkzeug.exceptions import InternalServerError
-from celery import states
+from . import celery, cssi, db
+from app.models import Session
 
-from . import celery
-from .utils import url_for
-
-text_types = (str, bytes)
-try:
-    text_types += (unicode,)
-except NameError:
-    # no unicode on Python 3
-    pass
-
-tasks = Blueprint('tasks', __name__)
+logger = logging.getLogger('cssi.api')
 
 
 @celery.task
-def run_flask_request(environ):
+def calculate_latency(pre_frames, curr_head_frame, curr_scene_frame, session_id):
     from .wsgi_aux import app
+    with app.app_context():
+        pre_head_frame, prev_scene_frame = pre_frames
 
-    if '_wsgi.input' in environ:
-        environ['wsgi.input'] = BytesIO(environ['_wsgi.input'])
+        _, phf_pitch, phf_yaw, phf_roll = cssi.latency.calculate_head_pose(frame=pre_head_frame)
+        _, chf_pitch, chf_yaw, chf_roll = cssi.latency.calculate_head_pose(frame=curr_head_frame)
+        _, _, sf_pitch, sf_yaw, sf_roll = cssi.latency.calculate_camera_pose(first_frame=prev_scene_frame,
+                                                                             second_frame=curr_scene_frame, crop=True,
+                                                                             crop_direction='horizontal')
 
-    # Create a request context similar to that of the original request
-    # so that the task can have access to flask.g, flask.request, etc.
-    with app.request_context(environ):
-        # Record the fact that we are running in the Celery worker now
-        g.in_celery = True
+        head_angles = [[phf_pitch, phf_yaw, phf_roll], [chf_pitch, chf_yaw, chf_roll]]
+        camera_angles = [sf_pitch, sf_yaw, sf_roll]
 
-        # Run the route function and record the response
-        try:
-            rv = app.full_dispatch_request()
-        except:
-            # If we are in debug mode we want to see the exception
-            # Else, return a 500 error
-            if app.debug:
-                raise
-            rv = app.make_response(InternalServerError())
-        return (rv.get_data(), rv.status_code, rv.headers)
+        latency_score = cssi.latency.generate_score(head_angles=head_angles, camera_angles=camera_angles)
 
-
-def async_task(f):
-    """
-    This decorator transforms a sync route to asynchronous by running it
-    in a background thread.
-    """
-    @wraps(f)
-    def wrapped(*args, **kwargs):
-        # If we are already running the request on the celery side, then we
-        # just call the wrapped function to allow the request to execute.
-        if getattr(g, 'in_celery', False):
-            return f(*args, **kwargs)
-
-        # If we are on the Flask side, we need to launch the Celery task,
-        # passing the request environment, which will be used to reconstruct
-        # the request object. The request body has to be handled as a special
-        # case, since WSGI requires it to be provided as a file-like object.
-        environ = {k: v for k, v in request.environ.items()
-                   if isinstance(v, text_types)}
-        if 'wsgi.input' in request.environ:
-            environ['_wsgi.input'] = request.get_data()
-        t = run_flask_request.apply_async(args=(environ,))
-
-        # Return a 202 response, with a link that the client can use to
-        # obtain task status that is based on the Celery task id.
-        if t.state == states.PENDING or t.state == states.RECEIVED or \
-                t.state == states.STARTED:
-            return '', 202, {'Location': url_for('tasks.get_status', id=t.id)}
-
-        # If the task already finished, return its return value as response.
-        # This would be the case when CELERY_ALWAYS_EAGER is set to True.
-        return t.info
-    return wrapped
+        session = Session.query.filter_by(id=session_id).first()
+        if session is not None:
+            new_score = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'score': latency_score}
+            session.latency_scores.append(new_score)
+            db.session.commit()
 
 
-@tasks.route('/status/<id>', methods=['GET'])
-def get_status(id):
-    """
-    Return status about an asynchronous task. If this request returns a 202
-    status code, it means that task hasn't finished yet. Else, the response
-    from the task is returned.
-    """
-    task = run_flask_request.AsyncResult(id)
-    if task.state == states.PENDING:
-        abort(404)
-    if task.state == states.RECEIVED or task.state == states.STARTED:
-        return '', 202, {'Location': url_for('tasks.get_status', id=id)}
-    return task.info
+@celery.task
+def record_sentiment(head_frame, session_id):
+    """Sample celery task that posts a message."""
+    from .wsgi_aux import app
+    with app.app_context():
+        sentiment = cssi.sentiment.detect_emotions(frame=head_frame)
+        session = Session.query.filter_by(id=session_id).first()
+        if session is not None:
+            if sentiment is not None:
+                new_score = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'sentiment': sentiment}
+                session.sentiment_scores.append(new_score)
+                db.session.commit()
+
+
+@celery.task
+def persist_prev_frames(head_frame, scene_frame, interval):
+    time.sleep(interval)
+    return head_frame, scene_frame
