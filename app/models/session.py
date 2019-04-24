@@ -1,4 +1,5 @@
 from marshmallow import fields, validate
+from sqlalchemy.ext.mutable import MutableList
 from .. import db, ma
 from .application import ApplicationSchema
 from .questionnaire import QuestionnaireSchema
@@ -14,9 +15,9 @@ class Session(db.Model):
     expected_emotions = db.Column(db.JSON, nullable=False)
     questionnaire_id = db.Column(db.Integer, db.ForeignKey('questionnaire.id', use_alter=True, name='fk_questionnaire_id'), nullable=False)
     cssi_score = db.Column(db.Float, nullable=False, default=0)
-    latency_scores = db.Column(db.JSON, nullable=False, default={})
+    latency_scores = db.Column(MutableList.as_mutable(db.JSON), nullable=False, default=[])
     total_latency_score = db.Column(db.Float, nullable=False, default=0)
-    sentiment_scores = db.Column(db.JSON, nullable=False, default={})
+    sentiment_scores = db.Column(MutableList.as_mutable(db.JSON), nullable=False, default=[])
     total_sentiment_score = db.Column(db.Float, nullable=False, default=0)
     questionnaire_scores = db.Column(db.JSON, nullable=True, default={})
     total_questionnaire_score = db.Column(db.Float, nullable=False, default=0)
@@ -38,9 +39,9 @@ class SessionSchema(ma.Schema):
     app = fields.Nested(ApplicationSchema, dump_only=True)
     questionnaire = fields.Nested(QuestionnaireSchema, dump_only=True)
     cssi_score = fields.Float()
-    latency_scores = fields.Dict()
+    latency_scores = fields.List(fields.Dict())
     total_latency_score = fields.Float()
-    sentiment_scores = fields.Dict()
+    sentiment_scores = fields.List(fields.Dict())
     total_sentiment_score = fields.Float()
     questionnaire_scores = fields.Dict()
     total_questionnaire_score = fields.Float()
