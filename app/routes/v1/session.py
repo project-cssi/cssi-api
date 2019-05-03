@@ -90,6 +90,17 @@ def update_session(id):
     return jsonify({'status': 'success', 'message': 'Successfully updated the session data', 'data': result}), 200
 
 
+@session.route('/<int:id>/status', methods=['PATCH'])
+@cross_origin(supports_credentials=True)
+def update_session_status(id):
+    """Update session status"""
+    session = Session.query.get(id)
+    session.status = request.json['status']
+    db.session.commit()
+    result = session_schema.dump(session).data
+    return jsonify({'status': 'success', 'message': 'Successfully update the session status', 'data': result}), 200
+
+
 @session.route('/', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def create_session():
