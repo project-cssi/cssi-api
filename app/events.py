@@ -1,13 +1,9 @@
 import logging
-import base64
-import numpy as np
-from io import BytesIO
-from PIL import Image
-from celery import chain
 
 from app.models import Session
 from . import socketio, celery, db
-from .tasks import calculate_latency, persist_prev_frames, record_sentiment
+from .tasks import calculate_latency, persist_frames, record_sentiment
+from .utils import decode_base64
 
 logger = logging.getLogger('cssi.api')
 
@@ -29,22 +25,20 @@ def on_test_init(session_id):
 def on_test_start(head_frame, scene_frame, session_id, latency_interval=2):
     _head_frame = head_frame["head_frame"]
     _scene_frame = scene_frame["scene_frame"]
+    latency_frame_count = 10
 
-    # decoding base64 string to opencv compatible format
-    _head_frame_starter = _head_frame.find(',')
-    _head_frame_image_data = _head_frame[_head_frame_starter + 1:]
-    _head_frame_image_data = bytes(_head_frame_image_data, encoding="ascii")
-    _head_frame_decoded = np.array(Image.open(BytesIO(base64.b64decode(_head_frame_image_data))))
+    # decoding head-frame image(base64) string to OpenCV compatible format
+    _head_frame_decoded = decode_base64(_head_frame)
 
-    _scene_frame_starter = _scene_frame.find(',')
-    _scene_frame_image_data = _scene_frame[_scene_frame_starter + 1:]
-    _scene_frame_image_data = bytes(_scene_frame_image_data, encoding="ascii")
-    _scene_frame_decoded = np.array(Image.open(BytesIO(base64.b64decode(_scene_frame_image_data))))
+    # decoding scene-frame image(base64) string to OpenCV compatible format
+    _scene_frame_decoded = decode_base64(_scene_frame)
 
-    chain(
-        persist_prev_frames.s(_head_frame_decoded, _scene_frame_decoded, latency_interval),
-        calculate_latency.s(_head_frame_decoded, _scene_frame_decoded, session_id["session_id"])
-    ).apply_async(expires=10)
+    # chain the two tasks which persist the frames and pass them to
+    # the latency worker after the specified time interval.
+    result = persist_frames.delay(head_frame=_head_frame, scene_frame=_scene_frame, limit=latency_frame_count)
+
+    if result:
+        calculate_latency.delay(session_id["session_id"], limit=latency_frame_count)
 
     record_sentiment.apply_async(args=[_head_frame_decoded, session_id["session_id"]], expires=10)
 
