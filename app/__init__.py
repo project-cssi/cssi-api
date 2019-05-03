@@ -31,7 +31,7 @@ logger = logging.getLogger('cssi.api')
 logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
 
-cssi = CSSI(shape_predictor="app/data/classifiers/shape_predictor_68_face_landmarks.dat", debug=False, config_file="cssi.rc")
+cssi = CSSI(shape_predictor="app/data/classifiers/shape_predictor_68_face_landmarks.dat", debug=False, config_file="config.cssi")
 db = SQLAlchemy()
 ma = Marshmallow()
 socketio = SocketIO()
