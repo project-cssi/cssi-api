@@ -52,15 +52,35 @@ def update_session(id):
     """Update information when the session comes to an end."""
     session = Session.query.get(id)
 
+    # get all the final scores
     latency_score = cssi.latency.generate_final_score(scores=session.latency_scores)
     sentiment_score = cssi.sentiment.generate_final_score(all_emotions=session.sentiment_scores, expected_emotions=session.expected_emotions)
     questionnaire_score = cssi.questionnaire.generate_final_score(pre=session.questionnaire.pre, post=session.questionnaire.post)
     cssi_score = cssi.generate_cssi_score(tl=latency_score, ts=sentiment_score, tq=questionnaire_score)
 
+    # set the scores in the session
     session.total_latency_score = latency_score
     session.total_sentiment_score = sentiment_score
     session.total_questionnaire_score = questionnaire_score
     session.cssi_score = cssi_score
+
+    # get a breakdown of the questionnaire scores and set it in the session
+    [pre_n, pre_o, pre_d, pre_ts], [post_n, post_o, post_d, post_ts] = cssi.questionnaire.generate_score_breakdown(pre=session.questionnaire.pre, post=session.questionnaire.post)
+    q_score_breakdown = {
+        "pre": {
+            "N": pre_n,
+            "O": pre_o,
+            "D": pre_d,
+            "TS": pre_ts
+        },
+        "post": {
+            "N": post_n,
+            "O": post_o,
+            "D": post_d,
+            "TS": post_ts
+        }
+    }
+    session.questionnaire_scores = q_score_breakdown
 
     session.status = "completed"
     db.session.commit()
