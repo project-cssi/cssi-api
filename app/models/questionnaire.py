@@ -1,4 +1,4 @@
-from marshmallow import fields, validate
+from marshmallow import fields
 from .. import db, ma
 
 
@@ -19,14 +19,8 @@ class Questionnaire(db.Model):
         return '<Questionnaire %r>' % self.id
 
 
-class SymptomSchema(ma.Schema):
-    name = fields.String(required=False)
-    display_name = fields.String(required=False)
-    score = fields.String(required=False)
-
-
 class QuestionnaireSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
-    pre = fields.List(fields.Nested(SymptomSchema), dump_only=True)
-    post = fields.List(fields.Nested(SymptomSchema), dump_only=True)
-    creation_date = fields.DateTime()
+    pre = fields.Dict(required=True)
+    post = fields.Dict(required=False)
+    creation_date = fields.DateTime(dump_only=True)

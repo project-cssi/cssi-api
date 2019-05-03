@@ -17,7 +17,7 @@ Authors:
 
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-from app.models import Questionnaire, ApplicationType, QuestionnaireSchema, Genre
+from app.models import Questionnaire, QuestionnaireSchema
 from app import db
 
 questionnaire = Blueprint('questionnaire', __name__)
@@ -42,6 +42,17 @@ def get_questionnaire(id):
     questionnaire = Questionnaire.query.get(id)
     result = questionnaire_schema.dump(questionnaire).data
     return jsonify({'status': 'success', 'message': None, 'data': result}), 200
+
+
+@questionnaire.route('/<int:id>/post', methods=['PATCH'])
+@cross_origin(supports_credentials=True)
+def update_questionnaire(id):
+    """Get questionnaire when an id is passed in"""
+    questionnaire = Questionnaire.query.get(id)
+    questionnaire.post = request.json['post']
+    db.session.commit()
+    result = questionnaire_schema.dump(questionnaire).data
+    return jsonify({'status': 'success', 'message': 'Successfully added the post questionnaire', 'data': result}), 200
 
 
 @questionnaire.route('/', methods=['POST'])

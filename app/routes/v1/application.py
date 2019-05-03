@@ -20,10 +20,10 @@ import uuid
 import traceback
 from flask_cors import cross_origin
 from flask import Blueprint, jsonify, request
-from app.models import Application, ApplicationType,ApplicationTypeSchema, ApplicationSchema, Genre, GenreSchema
+from app.models import Application, ApplicationType, ApplicationTypeSchema, ApplicationSchema, Genre, GenreSchema
 from app import db
 
-logger = logging.getLogger('CSSI_REST_API')
+logger = logging.getLogger('cssi.api')
 
 application = Blueprint('application', __name__)
 
@@ -73,17 +73,6 @@ def get_application_genres():
 @cross_origin(supports_credentials=True)
 def create_application():
     """Create a new Application"""
-
-    json_data = request.get_json(force=True)
-
-    if not json_data:
-        return jsonify({'status': 'error', 'message': 'No input was provided.'}), 400
-
-    # Validate and deserialize input
-    data, errors = application_schema.load(json_data)
-    if errors:
-        return jsonify({'status': 'error', 'message': 'Incorrect format of data provided.', 'data': errors}), 422
-
     name = request.json['name']
     identifier = str(uuid.uuid4().hex)
     developer = request.json['developer']
@@ -99,7 +88,8 @@ def create_application():
     if not genre:
         return {'status': 'error', 'message': 'Invalid Genre Type'}, 400
 
-    new_application = Application(name=name, identifier=identifier, developer=developer, type=type, description=description, genre=genre)
+    new_application = Application(name=name, identifier=identifier,
+                                  developer=developer, type=type, description=description, genre=genre)
 
     db.session.add(new_application)
     db.session.commit()
@@ -112,7 +102,8 @@ def create_application():
 @application.after_request
 def after_request(response):
     """Logs a debug message on every successful request."""
-    logger.debug('%s %s %s %s %s', request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    logger.debug('%s %s %s %s %s', request.remote_addr, request.method,
+                 request.scheme, request.full_path, response.status)
     return response
 
 
@@ -120,5 +111,6 @@ def after_request(response):
 def exceptions(e):
     """Logs an error message and stacktrace if a request ends in error."""
     tb = traceback.format_exc()
-    logger.error('%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s', request.remote_addr, request.method, request.scheme, request.full_path, tb)
+    logger.error('%s %s %s %s 5xx INTERNAL SERVER ERROR\n%s', request.remote_addr,
+                 request.method, request.scheme, request.full_path, tb)
     return e.status_code

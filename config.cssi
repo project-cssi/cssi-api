@@ -1,0 +1,20 @@
+[run]
+plugins =
+    heartrate.plugin
+    ecg.plugin
+
+[latency]
+latency_weight = 50
+latency_boundary = 3
+
+[sentiment]
+sentiment_weight = 30
+
+[questionnaire]
+questionnaire_weight = 20
+
+[heartrate.plugin]
+weight = 0
+
+[ecg.plugin]
+weight = 0
