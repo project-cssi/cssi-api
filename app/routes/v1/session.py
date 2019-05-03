@@ -20,6 +20,8 @@ from flask_cors import cross_origin
 from app.models import Session, SessionSchema, Application, Questionnaire
 from app import db
 
+from app import cssi
+
 session = Blueprint('session', __name__)
 
 session_schema = SessionSchema(strict=True)
@@ -40,8 +42,32 @@ def get_sessions_list():
 def get_session(id):
     """Get info on a session when an id is passed in"""
     session = Session.query.get(id)
-    result = sessions_schema.dump(session).data
+    result = session_schema.dump(session).data
     return jsonify({'status': 'success', 'message': None, 'data': result}), 200
+
+
+@session.route('/<int:id>', methods=['PUT'])
+@cross_origin(supports_credentials=True)
+def update_session(id):
+    """Update information when the session comes to an end."""
+    session = Session.query.get(id)
+
+    latency_score = cssi.latency.generate_final_score(scores=session.latency_scores)
+    sentiment_score = cssi.sentiment.generate_final_score(all_emotions=session.sentiment_scores, expected_emotions=session.expected_emotions)
+    questionnaire_score = cssi.questionnaire.generate_final_score(pre=session.questionnaire.pre, post=session.questionnaire.post)
+    cssi_score = cssi.generate_cssi_score(tl=latency_score, ts=sentiment_score, tq=questionnaire_score)
+
+    session.total_latency_score = latency_score
+    session.total_sentiment_score = sentiment_score
+    session.total_questionnaire_score = questionnaire_score
+    session.cssi_score = cssi_score
+
+    session.status = "completed"
+    db.session.commit()
+
+    result = session_schema.dump(session).data
+
+    return jsonify({'status': 'success', 'message': 'Successfully updated the session data', 'data': result}), 200
 
 
 @session.route('/', methods=['POST'])
