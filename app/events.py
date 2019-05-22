@@ -2,10 +2,10 @@ import logging
 
 from app.models import Session
 from . import socketio, celery, db
-from .tasks import calculate_latency, persist_frames, record_sentiment
+from .tasks import calculate_latency, persist_frames, record_sentiment, calculate_plugin_unit_scores
 from .utils import decode_base64
 
-logger = logging.getLogger('cssi.api')
+logger = logging.getLogger("cssi.api")
 
 
 @socketio.on("test/init")
@@ -14,8 +14,8 @@ def on_test_init(session_id):
     with app.app_context():
         session = Session.query.filter_by(id=session_id).first()
         if session is not None:
-            if session.status == 'initialized':
-                session.status = 'started'
+            if session.status == "initialised":
+                session.status = "started"
                 db.session.commit()
                 socketio.send({"status": "success", "message": "The test session started successfully."}, json=True)
                 logger.info("Successfully initialized the test session. ID: {0}".format(session_id))
@@ -42,6 +42,8 @@ def on_test_start(head_frame, scene_frame, session_id, latency_interval=2):
 
     record_sentiment.apply_async(args=[_head_frame_decoded, session_id["session_id"]], expires=10)
 
+    calculate_plugin_unit_scores.apply_async(args=[_head_frame_decoded, _scene_frame_decoded, session_id["session_id"]], expires=10)
+
 
 @socketio.on("test/stop")
 def on_test_stop(session_id):
@@ -49,8 +51,8 @@ def on_test_stop(session_id):
     with app.app_context():
         session = Session.query.filter_by(id=session_id).first()
         if session is not None:
-            if session.status == 'started':
-                session.status = 'completed'
+            if session.status == "started":
+                session.status = "completed"
                 db.session.commit()
                 socketio.send({"status": "success", "message": "The test session completed successfully."}, json=True)
                 celery.control.purge()  # stop all celery workers
