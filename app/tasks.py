@@ -43,11 +43,11 @@ def calculate_latency(session_id, limit):
         latency_score = cssi.latency.generate_rotation_latency_score(head_angles=head_angles,
                                                                      camera_angles=camera_angles)
 
-        head_movement = cssi.latency.check_for_head_movement(head_stream)
-        logger.debug("Head movement detected: {0}".format(head_movement))
+        # head_movement = cssi.latency.check_for_head_movement(head_stream)
+        # logger.debug("Head movement detected: {0}".format(head_movement))
 
-        pst = cssi.latency.calculate_pst(scene_stream, 10)
-        logger.debug("Pixel switching time: {0}".format(pst))
+        # pst = cssi.latency.calculate_pst(scene_stream, 10)
+        # logger.debug("Pixel switching time: {0}".format(pst))
 
         session = Session.query.filter_by(id=session_id).first()
         if session is not None:
@@ -68,6 +68,25 @@ def record_sentiment(head_frame, session_id):
                 new_score = {'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'sentiment': sentiment}
                 session.sentiment_scores.append(new_score)
                 db.session.commit()
+
+
+@celery.task
+def calculate_plugin_unit_scores(head_frame, scene_frame, session_id):
+    """Celery task which handles plugin unit score generation and persistence"""
+    from .wsgi_aux import app
+    with app.app_context():
+        unit_scores = cssi.generate_contributor_plugin_unit_scores(head_frame=head_frame, scene_frame=scene_frame)
+        session = Session.query.filter_by(id=session_id).first()
+        if session is not None:
+            for value in unit_scores:
+                new_score = {"timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "score": value["score"]}
+                if value["name"] in session.plugin_scores:
+                    logger.debug("{0} Appending plugin unit score: {1}".format(value["name"], value["score"]))
+                    session.plugin_scores.setdefault(value["name"], []).append(new_score)
+                else:
+                    logger.debug("{0} Adding new plugin unit score: {1}".format(value["name"], value["score"]))
+                    session.plugin_scores[value["name"]] = [new_score]
+            db.session.commit()
 
 
 @celery.task
@@ -115,6 +134,6 @@ def get_frames_from_redis(r, key, limit):
 
     if count >= limit:
         r.delete(key)
-        logger.debug("Cleaning frame stream - key: {0}".format(key))
+        # logger.debug("Cleaning frame stream - key: {0}".format(key))
 
     return frames

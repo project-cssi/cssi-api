@@ -52,16 +52,22 @@ def update_session(id):
     """Update information when the session comes to an end."""
     session = Session.query.get(id)
 
-    # get all the final scores
+    # calculate all the final scores of the contributors
     latency_score = cssi.latency.generate_final_score(scores=session.latency_scores)
     sentiment_score = cssi.sentiment.generate_final_score(all_emotions=session.sentiment_scores, expected_emotions=session.expected_emotions)
     questionnaire_score = cssi.questionnaire.generate_final_score(pre=session.questionnaire.pre, post=session.questionnaire.post)
-    cssi_score = cssi.generate_cssi_score(tl=latency_score, ts=sentiment_score, tq=questionnaire_score)
+
+    # calculate the final scores of the plugins
+    plugin_scores = cssi.generate_plugin_final_scores(scores=session.plugin_scores)
+
+    # calculate the final CSSI Score
+    cssi_score = cssi.generate_cssi_score(tl=latency_score, ts=sentiment_score, tq=questionnaire_score, ps=plugin_scores)
 
     # set the scores in the session
     session.total_latency_score = latency_score
     session.total_sentiment_score = sentiment_score
     session.total_questionnaire_score = questionnaire_score
+    session.total_plugin_scores = plugin_scores
     session.cssi_score = cssi_score
 
     # get a breakdown of the questionnaire scores and set it in the session

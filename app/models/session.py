@@ -1,5 +1,5 @@
 from marshmallow import fields, validate
-from sqlalchemy.ext.mutable import MutableList
+from sqlalchemy.ext.mutable import MutableList, MutableDict
 from .. import db, ma
 from .application import ApplicationSchema
 from .questionnaire import QuestionnaireSchema
@@ -18,6 +18,8 @@ class Session(db.Model):
     latency_scores = db.Column(MutableList.as_mutable(db.JSON), nullable=False, default=[])
     total_latency_score = db.Column(db.Float, nullable=False, default=0)
     sentiment_scores = db.Column(MutableList.as_mutable(db.JSON), nullable=False, default=[])
+    plugin_scores = db.Column(MutableDict.as_mutable(db.JSON), nullable=False, default={})
+    total_plugin_scores = db.Column(MutableDict.as_mutable(db.JSON), nullable=False, default={})
     total_sentiment_score = db.Column(db.Float, nullable=False, default=0)
     questionnaire_scores = db.Column(db.JSON, nullable=True, default={})
     total_questionnaire_score = db.Column(db.Float, nullable=False, default=0)
@@ -42,6 +44,8 @@ class SessionSchema(ma.Schema):
     latency_scores = fields.List(fields.Dict())
     total_latency_score = fields.Float()
     sentiment_scores = fields.List(fields.Dict())
+    plugin_scores = fields.Dict()
+    total_plugin_scores = fields.Dict()
     total_sentiment_score = fields.Float()
     questionnaire_scores = fields.Dict()
     total_questionnaire_score = fields.Float()
