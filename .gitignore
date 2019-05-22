@@ -1,5 +1,5 @@
 # Ignoring shape predictor
-app/data/classifiers/shape_predictor_68_face_landmarks.dat
+app/data/classifiers/*.dat
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
