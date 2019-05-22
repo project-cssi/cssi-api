@@ -1,2 +1,2 @@
 use the bellow link to download the shape predictor file.
-http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+https://github.com/brionmario/dlib-custom-facial-landmark-model/blob/master/hmd_face_landmarks.dat
