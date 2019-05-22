@@ -1,7 +1,6 @@
 [run]
 plugins =
-    heartrate.plugin
-    ecg.plugin
+    cssi_plugin_heart_rate
 
 [latency]
 latency_weight = 50
@@ -13,8 +12,5 @@ sentiment_weight = 30
 [questionnaire]
 questionnaire_weight = 20
 
-[heartrate.plugin]
-weight = 0
-
-[ecg.plugin]
+[cssi_plugin_heart_rate]
 weight = 0
