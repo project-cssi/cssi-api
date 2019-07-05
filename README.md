@@ -1,14 +1,35 @@
-<p align="center">
+<p align="left">
     <img style="display:block;text-align:center" src="./docs/logos/cssi-logo-rest-api.svg" alt="logo-text" width="600" />
-    <p align="center" style="font-size: 1.2rem;">RESTful API for the CSSI Platform</p>
+    <p style="font-size: 1.2rem;">RESTful API for the CSSI Platform</p>
 </p>
 
 <!-- Badges -->
-<p align="center">
-  <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fproject-cssi%2Fcssi-api?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fproject-cssi%2Fcssi-api.svg?type=shield"/></a>
-  <a href="LICENSE.md">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" height="18">
+<p align="left">
+  <a href="https://travis-ci.org/project-cssi/cssi-api" alt="Travis">
+    <img src="https://travis-ci.org/project-cssi/cssi-api.svg?branch=master"/>
   </a>
+  <a href="https://github.com/project-cssi/cssi-api/graphs/contributors" alt="Contributors">
+    <img src="https://img.shields.io/github/contributors/project-cssi/cssi-api.svg?logo=github"/>
+  </a>
+  <a href="LICENSE.md">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" height="18">
+  </a>
+  <a href="https://requires.io/github/project-cssi/cssi-api/requirements/?branch=master">
+    <img src="https://requires.io/github/project-cssi/cssi-api/requirements.svg?branch=master" alt="Requirements Status" height="18">
+  </a>
+  <a href="https://github.com/project-cssi/cssi-api/stargazers">
+    <img src="https://img.shields.io/github/stars/project-cssi/cssi-api.svg?logo=github" alt="Github stars" height="18">
+  </a>
+  <a href="https://github.com/project-cssi/cssi-api/network/members">
+    <img src="https://img.shields.io/github/forks/project-cssi/cssi-api.svg?logo=github" alt="Github forks" height="18">
+  </a>
+  <a href="https://twitter.com/brion_mario">
+    <img src="https://img.shields.io/twitter/follow/brion_mario.svg?label=brion_mario&style=flat&logo=twitter&logoColor=4FADFF" alt="Twitter" height="18">
+  </a>
+  <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fproject-cssi%2Fcssi-api?ref=badge_shield" alt="FOSSA Status">
+    <img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fproject-cssi%2Fcssi-api.svg?type=shield"/>
+  </a>
+
 </p>
 
 # Getting Started
