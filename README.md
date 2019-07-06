@@ -1,5 +1,5 @@
 <p align="left">
-    <img style="display:block;text-align:center" src="./docs/logos/cssi-logo-rest-api.svg" alt="logo-text" width="600" />
+    <img style="display:block;text-align:center" src="./docs/logo/cssi-logo-rest-api.svg" alt="logo-text" width="600" />
     <p style="font-size: 1.2rem;">RESTful API for the CSSI Platform</p>
 </p>
 
@@ -63,14 +63,18 @@ python manage.py runserver
 
 # Built With
 
-<a href="https://www.python.org/" title="Python"><img src="./docs/technologies/python.svg" alt="python" height="30" /></a>&nbsp;&nbsp;
-<a href="http://flask.pocoo.org/" title="Flask"><img src="./docs/technologies/flask.svg" alt="flask" height="30" /></a>&nbsp;&nbsp;
-<a href="https://flask-socketio.readthedocs.io/en/latest/" title="Flask SocketIO"><img src="./docs/technologies/flask-socketio.png" alt="redux" height="30" /></a>&nbsp;&nbsp;
-<a href="https://flask-sqlalchemy.palletsprojects.com/en/2.x/" title="Flask SQL Alchemy"><img src="./docs/technologies/flask-sqlalchemy.png" alt="lodash" height="30" /></a>&nbsp;&nbsp;
-<a href="http://www.celeryproject.org/" title="Celery"><img src="./docs/technologies/celery.png" alt="celery" height="50" /></a>&nbsp;&nbsp;
-<a href="https://marshmallow.readthedocs.io/en/3.0/" title="Marshmallow"><img src="./docs/technologies/marshmallow.png" alt="marshmallow" height="50" /></a>&nbsp;&nbsp;
-<a href="https://www.mysql.com/" title="MySQL"><img src="./docs/technologies/mysql.svg" alt="sass" height="50" /></a>&nbsp;&nbsp;
-<a href="https://redis.io/" title="Redis"><img  src="./docs/technologies/redis.png" alt="redis" height="30" /></a>&nbsp;&nbsp;
+<a href="https://www.python.org/" title="Python"><img src="./docs/readme-resources/technologies/python.svg" alt="python" height="30" /></a>&nbsp;&nbsp;
+<a href="http://flask.pocoo.org/" title="Flask"><img src="./docs/readme-resources/technologies/flask.svg" alt="flask" height="30" /></a>&nbsp;&nbsp;
+<a href="https://flask-socketio.readthedocs.io/en/latest/" title="Flask SocketIO"><img src="./docs/readme-resources/technologies/flask-socketio.png" alt="redux" height="30" /></a>&nbsp;&nbsp;
+<a href="https://flask-sqlalchemy.palletsprojects.com/en/2.x/" title="Flask SQL Alchemy"><img src="./docs/readme-resources/technologies/flask-sqlalchemy.png" alt="lodash" height="30" /></a>&nbsp;&nbsp;
+<a href="http://www.celeryproject.org/" title="Celery"><img src="./docs/readme-resources/technologies/celery.png" alt="celery" height="50" /></a>&nbsp;&nbsp;
+<a href="https://marshmallow.readthedocs.io/en/3.0/" title="Marshmallow"><img src="./docs/readme-resources/technologies/marshmallow.png" alt="marshmallow" height="50" /></a>&nbsp;&nbsp;
+<a href="https://www.mysql.com/" title="MySQL"><img src="./docs/readme-resources/technologies/mysql.svg" alt="sass" height="50" /></a>&nbsp;&nbsp;
+<a href="https://redis.io/" title="Redis"><img  src="./docs/readme-resources/technologies/redis.png" alt="redis" height="30" /></a>&nbsp;&nbsp;
+
+# Releases
+
+Please read the [RELEASES.md](./docs/RELEASES.md) guideline to learn about the process for releasing the project.
 
 # Changelog
 
