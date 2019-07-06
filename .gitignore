@@ -1,6 +1,9 @@
 # Ignoring shape predictor
 app/data/classifiers/*.dat
 
+# redis dump db
+dump.rdb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
