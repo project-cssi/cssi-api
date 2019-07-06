@@ -1,5 +1,5 @@
 <p align="left">
-    <img style="display:block;text-align:center" src="./docs/logo/cssi-logo-rest-api.svg" alt="logo-text" width="600" />
+    <img style="display:block;text-align:center" src="./docs/logo/cssi-logo-rest-api.svg" alt="logo-text" height="100" />
     <p style="font-size: 1.2rem;">RESTful API for the CSSI Platform</p>
 </p>
 
