@@ -31,7 +31,7 @@ git push origin ${NEW_VERSION}
 git-changelog -o CHANGELOG.md -s angular -t angular .
 
 # Stage and create a release commit with CHANGELOG.md and VERSION.txt files
-git add CHANGELOG.md cssi/VERSION.txt
+git add CHANGELOG.md VERSION.txt
 git commit -m "release: cut the $NEW_VERSION release :tada:"
 
 echo "Successfully released a new version of CSSI: v$NEW_VERSION"
