@@ -84,6 +84,12 @@ Please refer [CHANGELOG.md](CHANGELOG.md) to learn about the latest improvements
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for contributing guidelines and to learn about our code of conduct.
 
+# Contributors
+
+<a href="https://github.com/project-cssi/cssi-api/graphs/contributors">
+  <img src="https://contributors-img.firebaseapp.com/image?repo=project-cssi/cssi-api" />
+</a>
+
 # License
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fproject-cssi%2Fcssi-api.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fproject-cssi%2Fcssi-api?ref=badge_large)
