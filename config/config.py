@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# (c) Copyright 2019 Brion Mario.
+# (c) Copyright 2019 CSSI.
 # (c) This file is part of the CSSI REST API and is made available under MIT license.
-# (c) For more information, see https://github.com/brionmario/cssi-api/blob/master/LICENSE.txt
-# (c) Please forward any queries to the given email address. email: brion@apareciumlabs.com
+# (c) For more information, see https://github.com/project-cssi/cssi-api/blob/master/LICENSE.md
+# (c) Please forward any queries to the given email address. email: opensource@apareciumlabs.com
 
 """Configurations for the CSSI REST API
 
