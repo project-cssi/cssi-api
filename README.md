@@ -14,9 +14,6 @@
   <a href="LICENSE.md">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" height="18">
   </a>
-  <a href="https://requires.io/github/project-cssi/cssi-api/requirements/?branch=master">
-    <img src="https://requires.io/github/project-cssi/cssi-api/requirements.svg?branch=master" alt="Requirements Status" height="18">
-  </a>
   <a href="https://github.com/project-cssi/cssi-api/stargazers">
     <img src="https://img.shields.io/github/stars/project-cssi/cssi-api.svg?logo=github" alt="Github stars" height="18">
   </a>
