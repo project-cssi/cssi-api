@@ -1,6 +1,6 @@
 celery==4.3.0
 eventlet==0.19.0
-flask==0.12.2
+flask==2.3.2
 flask_script==2.0.6
 flask_migrate==2.1.1
 flask_sqlalchemy==2.3.2
